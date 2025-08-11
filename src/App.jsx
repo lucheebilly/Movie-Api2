@@ -46,11 +46,6 @@ const App = () => {
 
       <div className="wrapper max-w-6xl mx-auto px-4 py-8">
         <header className="mb-8">
-          <img
-            src="Movie-Api2/hero.png"
-            alt="Hero Banner"
-            className="w-full rounded-md mb-6 max-w-full object-contain"
-          />
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">
             Find <span className="text-gradient">Movies</span> You Will Enjoy without the Hassle
           </h1>
