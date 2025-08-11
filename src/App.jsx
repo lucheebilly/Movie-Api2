@@ -47,7 +47,7 @@ const App = () => {
       <div className="wrapper max-w-6xl mx-auto px-4 py-8">
         <header className="mb-8">
           <img
-            src="/logo.png"
+            src={`${process.env.PUBLIC_URL}/logo.png`}
             alt="Logo"
             className="mx-auto mb-4 w-24 sm:w-32 max-w-full object-contain"
           />
@@ -84,7 +84,11 @@ const App = () => {
                 )}
 
                 <div className="flex items-center mb-1">
-                  <img src="/star.svg" alt="Star" className="w-4 h-4 mr-1 flex-shrink-0" />
+                  <img
+                    src={`${process.env.PUBLIC_URL}/star.svg`}
+                    alt="Star"
+                    className="w-4 h-4 mr-1 flex-shrink-0"
+                  />
                   <h3 className="text-xs sm:text-sm font-semibold truncate max-w-[110px]">
                     {movie.title}
                   </h3>
