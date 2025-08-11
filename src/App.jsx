@@ -1,87 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import Search from './components/Search.jsx';
+import React, { useEffect, useState } from "react";
 
-const API_BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
-const API_OPTIONS = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${API_KEY}`
-  }
-};
+const API_KEY = "YOUR_TMDB_API_KEY"; // Replace with your TMDB API key
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [movies, setMovies] = useState([]);
 
-  const fetchMovies = async () => {
-    try {
-      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
-
-      const response = await fetch(endpoint, API_OPTIONS);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setMovies(data.results || []);
-      setErrorMessage('');
-    } catch (error) {
-      console.error(`Error Fetching Movies: ${error}`);
-      setErrorMessage('Error Fetching Movies. Please try again later');
-    }
-  };
-
   useEffect(() => {
-    fetchMovies();
+    fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+    )
+      .then((res) => res.json())
+      .then((data) => setMovies(data.results))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white">
-      <div className="pattern" />
+    <main className="bg-gray-900 min-h-screen text-white p-4">
+      {/* Logo */}
+      <img
+        src={`${import.meta.env.BASE_URL}logo.png`}
+        alt="Logo"
+        className="mx-auto mb-4 w-24 sm:w-32 max-w-full object-contain"
+      />
 
-      <div className="wrapper max-w-6xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">
-            Find <span className="text-gradient">Movies</span> You Will Enjoy without the Hassle
-          </h1>
+      {/* Hero image */}
+      <img
+        src={`${import.meta.env.BASE_URL}hero.png`}
+        alt="Hero Banner"
+        className="w-full h-64 object-cover rounded-lg mb-6"
+      />
 
-          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        </header>
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Popular Movies
+      </h1>
 
-        <section className="all-movies">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">All Movies</h2>
-          {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+      {/* Movies grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        {movies.map((movie) => (
+          <div
+            key={movie.id}
+            className="bg-gray-800 p-3 rounded-lg shadow-lg flex flex-col"
+          >
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              className="rounded-lg mb-3 h-72 object-cover"
+            />
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {movies.length === 0 && !errorMessage && <p>No movies to display.</p>}
-            {movies.map(movie => (
-              <div
-                key={movie.id}
-                className="movie-card bg-gray-800 rounded-lg p-2 flex flex-col items-center"
-                style={{ maxWidth: '150px' }}
-              >
-                {movie.poster_path && (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                    alt={movie.title}
-                    className="rounded-md mb-1 max-w-full object-contain"
-                  />
-                )}
+            <div className="mt-auto">
+              {/* Movie title */}
+              <h2 className="text-lg font-semibold">{movie.title}</h2>
 
-                <h3 className="text-xs sm:text-sm font-semibold truncate max-w-[110px] mb-1">
-                  {movie.title}
-                </h3>
-
-                <p className="text-xs text-gray-300">Release Date: {movie.release_date}</p>
+              {/* Star rating */}
+              <div className="flex items-center mt-1">
+                <img
+                  src={`${import.meta.env.BASE_URL}star.svg`}
+                  alt="Star rating"
+                  className="w-4 h-4 mr-1"
+                />
+                <span>{movie.vote_average}</span>
               </div>
-            ))}
+
+              {/* Release date */}
+              <p className="text-gray-400 text-sm mt-1">
+                {movie.release_date}
+              </p>
+            </div>
           </div>
-        </section>
+        ))}
       </div>
     </main>
   );
